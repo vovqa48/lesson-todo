@@ -8,7 +8,6 @@ import {
 } from '../../constants/action-types';
 
 const initialState = {
-    isLoading: false,
     isAuth: false,
     name: null,
     error: null,
@@ -21,7 +20,6 @@ export const user = (state = initialState, action)  => {
         case USER_LOGIN_START:
             return {
                 ...state,
-                isLoading: true,
                 error: null,
             };
 
@@ -29,7 +27,6 @@ export const user = (state = initialState, action)  => {
             return {
                 ...state,
                 isAuth: true,
-                isLoading: false,
                 name: payload.name,
                 error: null,
             };
@@ -38,7 +35,6 @@ export const user = (state = initialState, action)  => {
             return {
                 ...state,
                 isAuth: false,
-                isLoading: false,
                 error: payload
             };
 
@@ -46,14 +42,12 @@ export const user = (state = initialState, action)  => {
             return {
                 ...state,
                 isAuth: true,
-                isLoading: true
             };
 
         case USER_LOGOUT_SUCCESS:
             return {
                 ...state,
                 isAuth: false,
-                isLoading: false,
                 name: null,
                 error: null,
             };
@@ -62,7 +56,6 @@ export const user = (state = initialState, action)  => {
             return {
                 ...state,
                 isAuth: true,
-                isLoading: false,
                 error: payload
             };
 

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from "react-router";
-import _ from 'lodash';
 import { PrivateRoute } from '../../components/PrivateRoute';
 import { Header } from '../Header';
 
@@ -29,7 +28,7 @@ const mapStateToProps = (state) => ({
     isAuth: state.user.isAuth,
     name: state.user.name,
     history: state.router,
-    store: state
+    isLoading: state.application.isLoading
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -45,9 +44,7 @@ class AppContainer extends Component {
     }
 
     render () {
-        const { name, logout, isAuth, store } = this.props;
-        console.log(store);
-        const isLoading = _.get(Object.values(store).find((obj) => obj.isLoading), 'isLoading', false);
+        const { name, logout, isAuth, isLoading } = this.props;
 
         return (
             <div className="layout">

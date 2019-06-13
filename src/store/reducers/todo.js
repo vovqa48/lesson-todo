@@ -6,7 +6,6 @@ import {
 
 const initialState = {
     todos: [],
-    isLoading: false,
     error: null,
 };
 
@@ -17,20 +16,17 @@ export const todo = (state = initialState, action)  => {
         case GET_TODO_LIST_START:
             return {
                 ...state,
-                isLoading: true,
             };
 
         case GET_TODO_LIST_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
                 todos: payload
             };
 
         case GET_TODO_LIST_FAIL:
             return {
                 ...state,
-                isLoading: false,
                 todos: [],
                 error: payload
             };

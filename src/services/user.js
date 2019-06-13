@@ -4,7 +4,6 @@ import { API } from './api';
 axios.defaults.withCredentials = true; 
 
 export const loginAPI = (payload) => {
-    console.log(payload);
     return axios.post(API.LOGIN(), payload)
 };
 
