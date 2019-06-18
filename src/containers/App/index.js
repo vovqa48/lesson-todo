@@ -9,7 +9,7 @@ import { Home } from '../Home';
 import { Login } from '../Login';
 import { Todo } from '../Todo';
 
-import { logout } from '../../store/actions/user';
+import { logout } from '../../containers/Login/actions';
 import { HOME, LOGIN, TODO } from '../../constants/routs';
 
 import './style.scss';

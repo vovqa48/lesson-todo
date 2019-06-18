@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadTodoList } from '../../store/actions/todo';
+import { loadTodoList } from './actions';
 import { ItemTodo } from './itemTodo';
 
 const mapStateToProps = (state) => ({

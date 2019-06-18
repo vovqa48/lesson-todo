@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { LoginForm } from '../../components/LoginForm';
-import { login } from '../../store/actions/user';
+import { login } from './actions';
 
 const mapStateToProps = (state) => ({
     isLoading: state.user.isLoading

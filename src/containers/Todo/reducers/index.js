@@ -2,11 +2,12 @@ import {
     GET_TODO_LIST_START,
     GET_TODO_LIST_SUCCESS,
     GET_TODO_LIST_FAIL
-} from '../../constants/action-types';
+} from '../constants';
 
 const initialState = {
     todos: [],
     error: null,
+    isLoading: false
 };
 
 export const todo = (state = initialState, action)  => {
@@ -16,19 +17,22 @@ export const todo = (state = initialState, action)  => {
         case GET_TODO_LIST_START:
             return {
                 ...state,
+                isLoading: true
             };
 
         case GET_TODO_LIST_SUCCESS:
             return {
                 ...state,
-                todos: payload
+                todos: payload,
+                isLoading: false
             };
 
         case GET_TODO_LIST_FAIL:
             return {
                 ...state,
                 todos: [],
-                error: payload
+                error: payload,
+                isLoading: false
             };
 
         default:

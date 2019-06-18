@@ -1,4 +1,4 @@
-import { login } from '../../store/actions/user';
+import { login } from '../../containers/Login/actions';
 
 // синхронная валидация
 export const validate = values => {
