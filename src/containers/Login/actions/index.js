@@ -4,7 +4,11 @@ import {
     USER_LOGIN_FAIL,
     USER_LOGOUT_START,
     USER_LOGOUT_SUCCESS,
-    USER_LOGOUT_FAIL
+    USER_LOGOUT_FAIL,
+
+    USER_ME_START,
+    USER_ME_SUCCESS,
+    USER_ME_FAIL
 } from '../constants';
 
 import {
@@ -12,7 +16,7 @@ import {
     STOP_LOADING
 } from '../../App/constants';
 
-import { loginAPI, logoutAPI } from '../services';
+import { loginAPI, logoutAPI, meAPI } from '../services';
 import { SubmissionError } from 'redux-form';
 
 export const success = (type, payload) => ({
@@ -37,7 +41,6 @@ export const login = payload => dispatch => {
     .then(result => {
         dispatch(success(USER_LOGIN_SUCCESS, result.data));
         localStorage.setItem('isAuth', true);
-        localStorage.setItem('isAuthData', JSON.stringify(result.data));
         dispatch(isLoading(STOP_LOADING));
     })
     .catch(error => {
@@ -47,19 +50,33 @@ export const login = payload => dispatch => {
     })
 }
 
-export const logout = payload => dispatch => {
+export const logout = () => dispatch => {
     dispatch({ type: USER_LOGOUT_START });
     dispatch({ type: START_LOADING });
 
-    return logoutAPI(payload)
+    return logoutAPI()
     .then(result => {
         dispatch(success(USER_LOGOUT_SUCCESS, result.data));
         localStorage.setItem('isAuth', false);
-        localStorage.setItem('isAuthData', JSON.stringify(result.data));
         dispatch(isLoading(STOP_LOADING));
     })
     .catch(error => {
-        dispatch(fail(USER_LOGOUT_FAIL, error));
+        dispatch(fail(USER_LOGOUT_FAIL, error.response.data));
+        dispatch(isLoading(STOP_LOADING));
+    })
+};
+
+export const getMe = () => dispatch => {
+    dispatch({ type: USER_ME_START });
+    dispatch({ type: START_LOADING });
+
+    return meAPI()
+    .then(result => {
+        dispatch(success(USER_ME_SUCCESS, result.data));
+        dispatch(isLoading(STOP_LOADING));
+    })
+    .catch(error => {
+        dispatch(fail(USER_ME_FAIL, error.response.data));
         dispatch(isLoading(STOP_LOADING));
     })
 };

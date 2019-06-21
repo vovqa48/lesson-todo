@@ -10,3 +10,7 @@ export const loginAPI = (payload) => {
 export const logoutAPI = () => {
     return axios.post(API.LOGOUT());
 };
+
+export const meAPI = () => {
+    return axios.get(API.ME());
+};

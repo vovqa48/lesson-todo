@@ -5,6 +5,7 @@ import {
 
 const initialState = {
     isLoading: false,
+    firstSet: true
 };
 
 export const application = (state = initialState, action)  => {
@@ -13,12 +14,16 @@ export const application = (state = initialState, action)  => {
     switch (type) {
         case START_LOADING:
             return {
-                isLoading: true
+                ...state,
+                isLoading: true,
+                firstSet: false
             };
 
         case STOP_LOADING:
             return {
-                isLoading: false
+                ...state,
+                isLoading: false,
+                firstSet: false
             };
 
         default:

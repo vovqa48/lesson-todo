@@ -4,12 +4,16 @@ import {
     USER_LOGIN_FAIL,
     USER_LOGOUT_START,
     USER_LOGOUT_SUCCESS,
-    USER_LOGOUT_FAIL
+    USER_LOGOUT_FAIL,
+
+    USER_ME_START,
+    USER_ME_SUCCESS,
+    USER_ME_FAIL
 } from '../constants';
 
 const initialState = {
-    isAuth: localStorage.getItem('isAuth') === 'true' ? true : false,
-    name: localStorage.getItem('isAuthData') ? JSON.parse(localStorage.getItem('isAuthData')).name : null,
+    isAuth: false,
+    name: null,
     error: null,
     isLoading: false
 };
@@ -62,6 +66,27 @@ export const user = (state = initialState, action)  => {
             return {
                 ...state,
                 isAuth: true,
+                error: payload,
+                isLoading: false
+            };
+
+        case USER_ME_START:
+            return {
+                ...state,
+                isLoading: true
+            };
+
+        case USER_ME_SUCCESS:
+            return {
+                ...state,
+                isAuth: true,
+                name: payload.name,
+                isLoading: false
+            };
+
+        case USER_ME_FAIL:
+            return {
+                ...state,
                 error: payload,
                 isLoading: false
             };

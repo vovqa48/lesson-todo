@@ -9,7 +9,7 @@ import { Home } from '../Home';
 import { Login } from '../Login';
 import { Todo } from '../Todo';
 
-import { logout } from '../../containers/Login/actions';
+import { logout, getMe } from '../../containers/Login/actions';
 import { HOME, LOGIN, TODO } from '../../constants/routs';
 
 import './style.scss';
@@ -28,11 +28,13 @@ const mapStateToProps = (state) => ({
     isAuth: state.user.isAuth,
     name: state.user.name,
     history: state.router,
-    isLoading: state.application.isLoading
+    isLoading: state.application.isLoading,
+    firstSet: state.application.firstSet
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    logout: () => dispatch(logout())
+    logout: () => dispatch(logout()),
+    getMe: () => dispatch(getMe()),
 });
 
 class AppContainer extends Component {
@@ -40,11 +42,32 @@ class AppContainer extends Component {
         isAuth: PropTypes.bool.isRequired,
         name: PropTypes.string,
         logout: PropTypes.func.isRequired,
+        getMe: PropTypes.func.isRequired,
         history: PropTypes.object.isRequired
     }
 
+    componentDidMount() {
+        const { firstSet } = this.props;
+        if(localStorage.getItem('isAuth') === 'true' && firstSet) {
+            this.getMe();
+        }
+    }
+    
+    getMe() {
+        this.props.getMe()
+    }
+
     render () {
-        const { name, logout, isAuth, isLoading } = this.props;
+        const { name, logout, isAuth, isLoading, firstSet } = this.props;
+
+        if(localStorage.getItem('isAuth') === 'true' && firstSet) {
+            return null
+        }
+        /* console.log(isAuth);
+        console.log(firstSet); */
+        /* if (isLoading && !firstSet) {
+            return <Preloader isVisible={isLoading} />
+        } */
 
         return (
             <div className="layout">
@@ -58,6 +81,7 @@ class AppContainer extends Component {
                 />
 
                 <div className="layout__body">
+                    {console.log(isAuth)}
                     <Switch>
                         <Route path={LOGIN} render={() => (
                                 isAuth

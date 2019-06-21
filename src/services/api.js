@@ -3,6 +3,7 @@ export const API = {
 
     LOGIN: () => `${API.BASE()}/login`,
     LOGOUT: () => `${API.BASE()}/logout`,
+    ME: () => `${API.BASE()}/me`,
 
     GET_TODO_LIST: () => `${API.BASE()}/todos`,
 };
