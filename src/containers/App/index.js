@@ -10,7 +10,7 @@ import { Login } from '../Login';
 import { Todo } from '../Todo';
 
 import { logout, getMe } from '../../containers/Login/actions';
-import { HOME, LOGIN, TODO } from '../../constants/routs';
+import { HOME, LOGIN, TODO, USERS } from '../../constants/routs';
 
 import './style.scss';
 
@@ -27,9 +27,11 @@ const Preloader = ({ isVisible }) => {
 const mapStateToProps = (state) => ({
     isAuth: state.user.isAuth,
     name: state.user.name,
+    role: state.user.role,
     history: state.router,
     isLoading: state.application.isLoading,
-    firstSet: state.application.firstSet
+    firstSet: state.application.firstSet,
+    userIsLoading: state.user.isLoading
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -41,13 +43,17 @@ class AppContainer extends Component {
     static propTypes = {
         isAuth: PropTypes.bool.isRequired,
         name: PropTypes.string,
+        role: PropTypes.string,
         logout: PropTypes.func.isRequired,
         getMe: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired
+        history: PropTypes.object.isRequired,
+        isLoading: PropTypes.bool,
+        userIsLoading: PropTypes.bool
     }
 
     componentDidMount() {
         const { firstSet } = this.props;
+
         if(localStorage.getItem('isAuth') === 'true' && firstSet) {
             this.getMe();
         }
@@ -58,16 +64,11 @@ class AppContainer extends Component {
     }
 
     render () {
-        const { name, logout, isAuth, isLoading, firstSet } = this.props;
+        const { name, role, logout, isAuth, isLoading, firstSet, userIsLoading } = this.props;
 
-        if(localStorage.getItem('isAuth') === 'true' && firstSet) {
-            return null
-        }
-        /* console.log(isAuth);
-        console.log(firstSet); */
-        /* if (isLoading && !firstSet) {
+        if( localStorage.getItem('isAuth') === 'true' && (firstSet || userIsLoading)) {
             return <Preloader isVisible={isLoading} />
-        } */
+        }
 
         return (
             <div className="layout">
@@ -78,10 +79,10 @@ class AppContainer extends Component {
                     name={name}
                     logout={logout}
                     isAuth={isAuth}
+                    role={role}
                 />
 
                 <div className="layout__body">
-                    {console.log(isAuth)}
                     <Switch>
                         <Route path={LOGIN} render={() => (
                                 isAuth

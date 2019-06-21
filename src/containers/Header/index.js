@@ -2,18 +2,19 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import { TODO, } from '../../constants/routs';
+import { TODO, USERS } from '../../constants/routs';
 import './style.scss';
 
 export class Header extends Component {
     static propTypes = {
         name: PropTypes.string,
+        role: PropTypes.string,
         isAuth: PropTypes.bool.isRequired,
         logout: PropTypes.func.isRequired
     }
 
     render() {
-        const { isAuth, logout, name } = this.props;
+        const { isAuth, logout, name, role } = this.props;
 
         if (!isAuth) {
             return (
@@ -23,12 +24,24 @@ export class Header extends Component {
             )
         }
 
+        const UsersListLink = () => {
+            if( role === 'admin' ) {
+                return(
+                    <li className="layout__header__menu-item">
+                        <Link to={USERS} className="link">Users List</Link>
+                    </li>
+                );
+            }
+            return null;
+        } 
+
         return (
             <div className="layout__header">
                 <ul className="layout__header__menu">
                     <li className="layout__header__menu-item">
                         <Link to={TODO} className="link">ToDo page</Link>
                     </li>
+                    <UsersListLink />
                     <li className="layout__header__menu-item">
                         {name}
                     </li>

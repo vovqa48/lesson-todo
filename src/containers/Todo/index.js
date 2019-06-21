@@ -13,7 +13,11 @@ const mapDispatchToProps = (dispatch) => ({
 
 export class TodoContainer extends Component {
     componentDidMount() {
-        this.loadData();
+        const { todos } = this.props;
+
+        if(!todos.length) {
+            this.loadData();
+        }
     }
     
     loadData() {

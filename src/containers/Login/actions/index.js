@@ -34,49 +34,49 @@ export const isLoading = (type) => ({
 });
 
 export const login = payload => dispatch => {
-    dispatch({ type: USER_LOGIN_START });
     dispatch({ type: START_LOADING });
+    dispatch({ type: USER_LOGIN_START });
 
     return loginAPI(payload)
     .then(result => {
+        dispatch(isLoading(STOP_LOADING));
         dispatch(success(USER_LOGIN_SUCCESS, result.data));
         localStorage.setItem('isAuth', true);
-        dispatch(isLoading(STOP_LOADING));
     })
     .catch(error => {
-        dispatch(fail(USER_LOGIN_FAIL, error.response.data));
         dispatch(isLoading(STOP_LOADING));
+        dispatch(fail(USER_LOGIN_FAIL, error.response.data));
         throw new SubmissionError({_error: error.response.data.message});
     })
 }
 
 export const logout = () => dispatch => {
-    dispatch({ type: USER_LOGOUT_START });
     dispatch({ type: START_LOADING });
+    dispatch({ type: USER_LOGOUT_START });
 
     return logoutAPI()
     .then(result => {
+        dispatch(isLoading(STOP_LOADING));
         dispatch(success(USER_LOGOUT_SUCCESS, result.data));
         localStorage.setItem('isAuth', false);
-        dispatch(isLoading(STOP_LOADING));
     })
     .catch(error => {
-        dispatch(fail(USER_LOGOUT_FAIL, error.response.data));
         dispatch(isLoading(STOP_LOADING));
+        dispatch(fail(USER_LOGOUT_FAIL, error.response.data));
     })
 };
 
 export const getMe = () => dispatch => {
-    dispatch({ type: USER_ME_START });
     dispatch({ type: START_LOADING });
+    dispatch({ type: USER_ME_START });
 
     return meAPI()
     .then(result => {
-        dispatch(success(USER_ME_SUCCESS, result.data));
         dispatch(isLoading(STOP_LOADING));
+        dispatch(success(USER_ME_SUCCESS, result.data));
     })
     .catch(error => {
-        dispatch(fail(USER_ME_FAIL, error.response.data));
         dispatch(isLoading(STOP_LOADING));
+        dispatch(fail(USER_ME_FAIL, error.response.data));
     })
 };

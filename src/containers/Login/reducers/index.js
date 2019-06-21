@@ -15,7 +15,8 @@ const initialState = {
     isAuth: false,
     name: null,
     error: null,
-    isLoading: false
+    isLoading: false,
+    role: null
 };
 
 export const user = (state = initialState, action)  => {
@@ -34,6 +35,7 @@ export const user = (state = initialState, action)  => {
                 ...state,
                 isAuth: true,
                 name: payload.name,
+                role: payload.role,
                 error: null,
                 isLoading: false
             };
@@ -58,6 +60,7 @@ export const user = (state = initialState, action)  => {
                 ...state,
                 isAuth: false,
                 name: null,
+                role: null,
                 error: null,
                 isLoading: false
             };
@@ -81,6 +84,7 @@ export const user = (state = initialState, action)  => {
                 ...state,
                 isAuth: true,
                 name: payload.name,
+                role: payload.role,
                 isLoading: false
             };
 
