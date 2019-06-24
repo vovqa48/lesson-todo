@@ -4,8 +4,7 @@ import {
 } from '../constants';
 
 const initialState = {
-    isLoading: false,
-    firstSet: true
+    isLoading: false
 };
 
 export const application = (state = initialState, action)  => {
@@ -15,15 +14,13 @@ export const application = (state = initialState, action)  => {
         case START_LOADING:
             return {
                 ...state,
-                isLoading: true,
-                firstSet: false
+                isLoading: true
             };
 
         case STOP_LOADING:
             return {
                 ...state,
-                isLoading: false,
-                firstSet: false
+                isLoading: false
             };
 
         default:

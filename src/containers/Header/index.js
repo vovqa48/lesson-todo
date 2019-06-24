@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import { TODO, USERS } from '../../constants/routs';
+import { isAdmin } from '../../services/helper';
 import './style.scss';
 
 export class Header extends Component {
@@ -25,7 +26,7 @@ export class Header extends Component {
         }
 
         const UsersListLink = () => {
-            if( role === 'admin' ) {
+            if( isAdmin(role) ) {
                 return(
                     <li className="layout__header__menu-item">
                         <Link to={USERS} className="link">Users List</Link>

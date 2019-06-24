@@ -5,12 +5,16 @@ import { ConnectedRouter } from 'connected-react-router';
 import { App } from './containers/App';
 import store, { history } from './store/store';
 
+import { ErrorBoundary } from './components/ErrorBoundary';
+
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <App />
+            <ErrorBoundary>
+                <App />
+            </ErrorBoundary>
         </ConnectedRouter>
     </Provider>,
     document.getElementById('root')

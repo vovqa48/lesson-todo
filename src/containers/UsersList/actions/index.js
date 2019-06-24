@@ -1,7 +1,7 @@
 import {
-    GET_TODO_LIST_START,
-    GET_TODO_LIST_SUCCESS,
-    GET_TODO_LIST_FAIL
+    GET_USERS_LIST_START,
+    GET_USERS_LIST_SUCCESS,
+    GET_USERS_LIST_FAIL
 } from '../constants';
 
 import {
@@ -9,7 +9,7 @@ import {
     STOP_LOADING
 } from '../../App/constants';
 
-import { loadTodoListApi } from '../services';
+import { LoadUsersListApi } from '../services';
 import { serverError } from '../../../services/helper';
 
 export const success = (type, payload) => ({
@@ -26,17 +26,17 @@ export const isLoading = (type) => ({
     type
 });
 
-export const loadTodoList = () => dispatch => {
-    dispatch({ type: GET_TODO_LIST_START });
+export const LoadUsersList = () => dispatch => {
     dispatch({ type: START_LOADING });
+    dispatch({ type: GET_USERS_LIST_START });
 
-    return loadTodoListApi()
+    return LoadUsersListApi()
     .then(result => {
-        dispatch(success(GET_TODO_LIST_SUCCESS, result.data));
         dispatch(isLoading(STOP_LOADING));
+        dispatch(success(GET_USERS_LIST_SUCCESS, result.data));
     })
     .catch(error => {
-        dispatch(fail(GET_TODO_LIST_FAIL, serverError(error)));
         dispatch(isLoading(STOP_LOADING));
+        dispatch(fail(GET_USERS_LIST_FAIL, serverError(error)));
     })
 }

@@ -1,0 +1,14 @@
+.user__wrap {
+    margin-bottom: 100px;
+
+    & .user__login {
+        font-size: 1.5em;
+    }
+    & .user__role {
+        margin-left: 30px;
+    }
+    & .user__name {
+        font-style: italic;
+        margin-left: 30px;
+    }
+}

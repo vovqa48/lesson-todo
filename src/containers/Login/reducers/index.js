@@ -16,7 +16,8 @@ const initialState = {
     name: null,
     error: null,
     isLoading: false,
-    role: null
+    role: null,
+    firstSet: true
 };
 
 export const user = (state = initialState, action)  => {
@@ -76,7 +77,8 @@ export const user = (state = initialState, action)  => {
         case USER_ME_START:
             return {
                 ...state,
-                isLoading: true
+                isLoading: true,
+                firstSet: true
             };
 
         case USER_ME_SUCCESS:
@@ -85,14 +87,16 @@ export const user = (state = initialState, action)  => {
                 isAuth: true,
                 name: payload.name,
                 role: payload.role,
-                isLoading: false
+                isLoading: false,
+                firstSet: false
             };
 
         case USER_ME_FAIL:
             return {
                 ...state,
                 error: payload,
-                isLoading: false
+                isLoading: false,
+                firstSet: false
             };
 
         default:

@@ -8,6 +8,7 @@ import { Header } from '../Header';
 import { Home } from '../Home';
 import { Login } from '../Login';
 import { Todo } from '../Todo';
+import { UsersList } from '../UsersList';
 
 import { logout, getMe } from '../../containers/Login/actions';
 import { HOME, LOGIN, TODO, USERS } from '../../constants/routs';
@@ -30,7 +31,7 @@ const mapStateToProps = (state) => ({
     role: state.user.role,
     history: state.router,
     isLoading: state.application.isLoading,
-    firstSet: state.application.firstSet,
+    firstSet: state.user.firstSet,
     userIsLoading: state.user.isLoading
 });
 
@@ -66,7 +67,7 @@ class AppContainer extends Component {
     render () {
         const { name, role, logout, isAuth, isLoading, firstSet, userIsLoading } = this.props;
 
-        if( localStorage.getItem('isAuth') === 'true' && (firstSet || userIsLoading)) {
+        if( localStorage.getItem('isAuth') === 'true' && (firstSet || (firstSet && userIsLoading))) {
             return <Preloader isVisible={isLoading} />
         }
 
@@ -92,6 +93,7 @@ class AppContainer extends Component {
                         />
                         <PrivateRoute exact isAuth={isAuth} path={HOME} component={Home} />
                         <PrivateRoute isAuth={isAuth} path={TODO} component={Todo} />
+                        <PrivateRoute isAuth={isAuth} path={USERS} component={UsersList} />
                         <PrivateRoute isAuth={isAuth} render={'Page not found!'} />
                     </Switch>
                 </div>

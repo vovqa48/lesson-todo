@@ -17,6 +17,7 @@ import {
 } from '../../App/constants';
 
 import { loginAPI, logoutAPI, meAPI } from '../services';
+import { serverError } from '../../../services/helper';
 import { SubmissionError } from 'redux-form';
 
 export const success = (type, payload) => ({
@@ -45,8 +46,8 @@ export const login = payload => dispatch => {
     })
     .catch(error => {
         dispatch(isLoading(STOP_LOADING));
-        dispatch(fail(USER_LOGIN_FAIL, error.response.data));
-        throw new SubmissionError({_error: error.response.data.message});
+        dispatch(fail(USER_LOGIN_FAIL, serverError(error)));
+        throw new SubmissionError({_error: serverError(error)});
     })
 }
 
@@ -62,7 +63,7 @@ export const logout = () => dispatch => {
     })
     .catch(error => {
         dispatch(isLoading(STOP_LOADING));
-        dispatch(fail(USER_LOGOUT_FAIL, error.response.data));
+        dispatch(fail(USER_LOGOUT_FAIL, serverError(error)));
     })
 };
 
@@ -77,6 +78,6 @@ export const getMe = () => dispatch => {
     })
     .catch(error => {
         dispatch(isLoading(STOP_LOADING));
-        dispatch(fail(USER_ME_FAIL, error.response.data));
+        dispatch(fail(USER_ME_FAIL, serverError(error)));
     })
 };

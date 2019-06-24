@@ -5,6 +5,7 @@ import { ItemTodo } from './itemTodo';
 
 const mapStateToProps = (state) => ({
     todos: state.todo.todos,
+    error: state.todo.error
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -25,7 +26,15 @@ export class TodoContainer extends Component {
     }
 
     render() {
-        const { todos } = this.props;
+        const { todos, error } = this.props;
+        
+        if(error !== null) {
+            return (
+                <div>
+                    {error}
+                </div>
+            )
+        }
 
         return (
             <div>

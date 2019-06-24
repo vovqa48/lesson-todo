@@ -11,6 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 class HomeContainer extends Component {
     render() {
+        //throw "Error2";
         const { name } = this.props;
 
         return (
