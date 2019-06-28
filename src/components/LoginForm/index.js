@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import classNames  from 'classnames';
-import { validate, asyncValidate } from './validate';
+import { validate } from './validate';
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => {
     const className = classNames('form__wrapper_block__input', error && 'error')
@@ -19,9 +19,9 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => {
 
 export class LoginForm extends Component {
     render() {
-        const { error, handleSubmit, submitting } = this.props;
+        const { error, handleSubmit, submitting, customSubmit } = this.props;
         return (
-            <form onSubmit={handleSubmit(asyncValidate)} className="form">
+            <form onSubmit={handleSubmit(customSubmit)} className="form">
                 <Field
                     name="login"
                     type="text"

@@ -94,6 +94,7 @@ export const user = (state = initialState, action)  => {
         case USER_ME_FAIL:
             return {
                 ...state,
+                isAuth: false,
                 error: payload,
                 isLoading: false,
                 firstSet: false

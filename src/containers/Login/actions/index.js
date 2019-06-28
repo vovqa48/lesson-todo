@@ -34,6 +34,17 @@ export const isLoading = (type) => ({
     type
 });
 
+export const loginSuccess = payload => dispatch => {
+    dispatch(success(USER_LOGIN_SUCCESS, payload));
+    localStorage.setItem('isAuth', true);
+}
+
+export const loginFail = error => dispatch => {
+    dispatch(fail(USER_LOGIN_FAIL, serverError(error)));
+    localStorage.setItem('isAuth', false);
+    throw new SubmissionError({_error: serverError(error)});
+}
+
 export const login = payload => dispatch => {
     dispatch({ type: START_LOADING });
     dispatch({ type: USER_LOGIN_START });
@@ -52,17 +63,17 @@ export const login = payload => dispatch => {
 }
 
 export const logout = () => dispatch => {
-    dispatch({ type: START_LOADING });
-    dispatch({ type: USER_LOGOUT_START });
+    /* dispatch({ type: START_LOADING });
+    dispatch({ type: USER_LOGOUT_START }); */
 
     return logoutAPI()
     .then(result => {
-        dispatch(isLoading(STOP_LOADING));
+        //dispatch(isLoading(STOP_LOADING));
         dispatch(success(USER_LOGOUT_SUCCESS, result.data));
         localStorage.setItem('isAuth', false);
     })
     .catch(error => {
-        dispatch(isLoading(STOP_LOADING));
+        //dispatch(isLoading(STOP_LOADING));
         dispatch(fail(USER_LOGOUT_FAIL, serverError(error)));
     })
 };

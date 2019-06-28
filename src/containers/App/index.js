@@ -13,6 +13,9 @@ import { UsersList } from '../UsersList';
 import { logout, getMe } from '../../containers/Login/actions';
 import { HOME, LOGIN, TODO, USERS } from '../../constants/routs';
 
+import { history } from '../../store/store'
+import { API } from '../../services/api';
+
 import './style.scss';
 
 const Preloader = ({ isVisible }) => {
@@ -29,7 +32,6 @@ const mapStateToProps = (state) => ({
     isAuth: state.user.isAuth,
     name: state.user.name,
     role: state.user.role,
-    history: state.router,
     isLoading: state.application.isLoading,
     firstSet: state.user.firstSet,
     userIsLoading: state.user.isLoading
@@ -47,7 +49,6 @@ class AppContainer extends Component {
         role: PropTypes.string,
         logout: PropTypes.func.isRequired,
         getMe: PropTypes.func.isRequired,
-        history: PropTypes.object.isRequired,
         isLoading: PropTypes.bool,
         userIsLoading: PropTypes.bool
     }
@@ -64,6 +65,11 @@ class AppContainer extends Component {
         this.props.getMe()
     }
 
+    handleLogout() {
+        history.push(LOGIN)
+        this.props.logout()
+    }
+
     render () {
         const { name, role, logout, isAuth, isLoading, firstSet, userIsLoading } = this.props;
 
@@ -78,7 +84,7 @@ class AppContainer extends Component {
 
                 <Header
                     name={name}
-                    logout={logout}
+                    logout={() => this.handleLogout()}
                     isAuth={isAuth}
                     role={role}
                 />
