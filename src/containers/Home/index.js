@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { getNameState } from '../Login/selectors';
 
 const mapStateToProps = (state) => ({
-    name: state.user.name
+    name: getNameState(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({

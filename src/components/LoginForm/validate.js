@@ -1,6 +1,4 @@
-import { login } from '../../containers/Login/actions';
-
-// синхронная валидация
+// synchronous validation
 export const validate = values => {
     const errors = {};
     if(!values.login){
@@ -9,12 +7,6 @@ export const validate = values => {
     if(!values.password){
         errors.password = 'Required field!';
     }
-    // для синхронной валидации нужно вернуть объект с ошибками
-    return errors
-};
 
-//асинхронная валидация
-//принимает два параметра значения и redux dispatch
-export const asyncValidate = (values, dispatch) => {
-    return dispatch(login(values))
+    return errors
 };

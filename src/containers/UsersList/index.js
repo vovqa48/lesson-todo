@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { LoadUsersList } from './actions';
 import { ItemUser } from './itemUser';
+import { getUsersState, getUsersErrorState } from './selectors';
+import { getRoleState } from '../Login/selectors';
 
 const mapStateToProps = (state) => ({
-    role: state.user.role,
-    users: state.users.users,
-    error: state.users.error
+    role: getRoleState(state),
+    users: getUsersState(state),
+    error: getUsersErrorState(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({

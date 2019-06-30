@@ -2,7 +2,7 @@ import {
     USER_LOGIN_START,
     USER_LOGIN_SUCCESS,
     USER_LOGIN_FAIL,
-    USER_LOGOUT_START,
+    /*USER_LOGOUT_START,*/
     USER_LOGOUT_SUCCESS,
     USER_LOGOUT_FAIL,
 
@@ -30,20 +30,31 @@ export const fail = (type, payload) => ({
     payload
 });
 
+export const startLogin = (type) => ({
+    type
+});
+
 export const isLoading = (type) => ({
     type
 });
 
+//Login
 export const loginSuccess = payload => dispatch => {
+    dispatch(isLoading(STOP_LOADING));
     dispatch(success(USER_LOGIN_SUCCESS, payload));
-    localStorage.setItem('isAuth', true);
 }
 
 export const loginFail = error => dispatch => {
+    dispatch(isLoading(STOP_LOADING));
     dispatch(fail(USER_LOGIN_FAIL, serverError(error)));
-    localStorage.setItem('isAuth', false);
     throw new SubmissionError({_error: serverError(error)});
 }
+
+export const loginStart = () => dispatch => {
+    dispatch({ type: START_LOADING });
+    dispatch(startLogin(USER_LOGIN_START));
+}
+//Login
 
 export const login = payload => dispatch => {
     dispatch({ type: START_LOADING });
@@ -53,7 +64,6 @@ export const login = payload => dispatch => {
     .then(result => {
         dispatch(isLoading(STOP_LOADING));
         dispatch(success(USER_LOGIN_SUCCESS, result.data));
-        localStorage.setItem('isAuth', true);
     })
     .catch(error => {
         dispatch(isLoading(STOP_LOADING));
@@ -70,7 +80,6 @@ export const logout = () => dispatch => {
     .then(result => {
         //dispatch(isLoading(STOP_LOADING));
         dispatch(success(USER_LOGOUT_SUCCESS, result.data));
-        localStorage.setItem('isAuth', false);
     })
     .catch(error => {
         //dispatch(isLoading(STOP_LOADING));

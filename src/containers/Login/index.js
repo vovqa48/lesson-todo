@@ -3,22 +3,22 @@ import { bindActionCreators  } from 'redux';
 import { connect } from 'react-redux';
 import { LoginForm } from '../../components/LoginForm';
 import { loginAPI } from './services';
-import { loginSuccess, loginFail } from './actions';
+import { loginSuccess, loginFail, loginStart } from './actions';
+import { getLoadingStatusState } from '../App/selectors';
 
 const mapStateToProps = (state) => ({
-    isLoading: state.user.isLoading
+    isLoading: getLoadingStatusState(state)
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-    loginUserSuccess: (values) => loginSuccess(values),
+    loginUserStart: () => loginStart(),
+    loginUserSuccess: (values) => loginSuccess(values.data),
     loginUserFail: (error) => loginFail(error)
 }, dispatch);
 
 class LoginContainer extends Component {
-    /* handleSubmit(values) {
-        this.props.loginUser(values)
-    } */
     handleSubmit(values) {
+        this.props.loginUserStart();
         return loginAPI(values)
             .then(this.props.loginUserSuccess)
             .catch(this.props.loginUserFail)

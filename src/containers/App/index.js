@@ -8,13 +8,25 @@ import { Header } from '../Header';
 import { Home } from '../Home';
 import { Login } from '../Login';
 import { Todo } from '../Todo';
+import { TodoPage } from '../Todo/TodoPage';
+import { AddTodoPage } from '../Todo/AddTodoPage';
 import { UsersList } from '../UsersList';
 
 import { logout, getMe } from '../../containers/Login/actions';
-import { HOME, LOGIN, TODO, USERS } from '../../constants/routs';
+import { HOME, LOGIN, TODO, USERS, TODO_PAGE, ADD_TODO_PAGE } from '../../constants/routs';
 
-import { history } from '../../store/store'
-import { API } from '../../services/api';
+import { history } from '../../store/store';
+
+import {
+    getLoadingStatusState
+} from './selectors';
+
+import {
+    getAuthStatusState,
+    getNameState,
+    getRoleState,
+    getIsInitialDataFetchingOfUserState
+} from '../Login/selectors';
 
 import './style.scss';
 
@@ -29,12 +41,11 @@ const Preloader = ({ isVisible }) => {
 }
 
 const mapStateToProps = (state) => ({
-    isAuth: state.user.isAuth,
-    name: state.user.name,
-    role: state.user.role,
-    isLoading: state.application.isLoading,
-    firstSet: state.user.firstSet,
-    userIsLoading: state.user.isLoading
+    isAuth: getAuthStatusState(state),
+    name: getNameState(state),
+    role: getRoleState(state),
+    isLoading: getLoadingStatusState(state),
+    isInitialDataFetching: getIsInitialDataFetchingOfUserState(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -49,14 +60,13 @@ class AppContainer extends Component {
         role: PropTypes.string,
         logout: PropTypes.func.isRequired,
         getMe: PropTypes.func.isRequired,
-        isLoading: PropTypes.bool,
-        userIsLoading: PropTypes.bool
+        isLoading: PropTypes.bool
     }
 
     componentDidMount() {
-        const { firstSet } = this.props;
+        const { isInitialDataFetching } = this.props;
 
-        if(localStorage.getItem('isAuth') === 'true' && firstSet) {
+        if( isInitialDataFetching ) {
             this.getMe();
         }
     }
@@ -71,9 +81,9 @@ class AppContainer extends Component {
     }
 
     render () {
-        const { name, role, logout, isAuth, isLoading, firstSet, userIsLoading } = this.props;
+        const { name, role, isAuth, isLoading, isInitialDataFetching } = this.props;
 
-        if( localStorage.getItem('isAuth') === 'true' && (firstSet || (firstSet && userIsLoading))) {
+        if( isInitialDataFetching ) {
             return <Preloader isVisible={isLoading} />
         }
 
@@ -98,6 +108,8 @@ class AppContainer extends Component {
                             )}
                         />
                         <PrivateRoute exact isAuth={isAuth} path={HOME} component={Home} />
+                        <PrivateRoute isAuth={isAuth} path={ADD_TODO_PAGE} component={AddTodoPage} />
+                        <PrivateRoute isAuth={isAuth} path={TODO_PAGE} component={TodoPage} />
                         <PrivateRoute isAuth={isAuth} path={TODO} component={Todo} />
                         <PrivateRoute isAuth={isAuth} path={USERS} component={UsersList} />
                         <PrivateRoute isAuth={isAuth} render={'Page not found!'} />

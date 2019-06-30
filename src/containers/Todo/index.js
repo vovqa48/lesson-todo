@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadTodoList } from './actions';
 import { ItemTodo } from './itemTodo';
+import { getTodosState, getTodosErrorState } from './selectors'
+import { Link } from "react-router-dom";
 
 const mapStateToProps = (state) => ({
-    todos: state.todo.todos,
-    error: state.todo.error
+    todos: getTodosState(state),
+    error: getTodosErrorState(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -43,12 +45,16 @@ export class TodoContainer extends Component {
                     todos.map((todo) => 
                         <ItemTodo 
                             key={todo.id} 
+                            id={todo.id} 
                             title={todo.title} 
                             description={todo.description} 
                             createdBy={todo.createdBy} 
                         />
                     )
                 }
+
+                <Link to='/todo/add'>Add todo</Link>
+
             </div>
         )
     }
