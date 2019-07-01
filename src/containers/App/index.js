@@ -13,7 +13,7 @@ import { AddTodoPage } from '../Todo/AddTodoPage';
 import { UsersList } from '../UsersList';
 
 import { logout, getMe } from '../../containers/Login/actions';
-import { HOME, LOGIN, TODO, USERS, TODO_PAGE, ADD_TODO_PAGE } from '../../constants/routs';
+import { HOME, LOGIN, TODO_LIST, USERS, TODO_PAGE, ADD_TODO_PAGE } from '../../constants/routs';
 
 import { history } from '../../store/store';
 
@@ -108,9 +108,8 @@ class AppContainer extends Component {
                             )}
                         />
                         <PrivateRoute exact isAuth={isAuth} path={HOME} component={Home} />
-                        <PrivateRoute isAuth={isAuth} path={ADD_TODO_PAGE} component={AddTodoPage} />
                         <PrivateRoute isAuth={isAuth} path={TODO_PAGE} component={TodoPage} />
-                        <PrivateRoute isAuth={isAuth} path={TODO} component={Todo} />
+                        <PrivateRoute isAuth={isAuth} path={TODO_LIST} component={Todo} />
                         <PrivateRoute isAuth={isAuth} path={USERS} component={UsersList} />
                         <PrivateRoute isAuth={isAuth} render={'Page not found!'} />
                     </Switch>

@@ -7,4 +7,5 @@ export const API = {
     USERS: () => `${API.BASE()}/users`,
 
     GET_TODO_LIST: () => `${API.BASE()}/todos`,
+    DELETE_TODO_ITEM: (id) => `${API.BASE()}/todos/${id}`,
 };

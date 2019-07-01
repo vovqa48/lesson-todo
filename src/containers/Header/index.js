@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { TODO, USERS } from '../../constants/routs';
+import { TODO_LIST, USERS } from '../../constants/routs';
 import { isAdmin } from '../../services/helper';
 import './style.scss';
 
@@ -40,7 +40,7 @@ export class Header extends Component {
             <div className="layout__header">
                 <ul className="layout__header__menu">
                     <li className="layout__header__menu-item">
-                        <Link to={TODO} className="link">ToDo page</Link>
+                        <Link to={TODO_LIST} className="link">ToDo page</Link>
                     </li>
                     <UsersListLink />
                     <li className="layout__header__menu-item">
