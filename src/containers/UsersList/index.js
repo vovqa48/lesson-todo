@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { LoadUsersList } from './actions';
+import { LoadUsersListApi } from './services';
 import { ItemUser } from './itemUser';
 import { getUsersState, getUsersErrorState } from './selectors';
 import { getRoleState } from '../Login/selectors';
+import { loadUsersListSuccess, loadUsersListFail, loadUsersListStart } from './actions';
 
 const mapStateToProps = (state) => ({
     role: getRoleState(state),
@@ -12,7 +13,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    LoadUsersList: () => dispatch(LoadUsersList())
+    loadUsersListStart: () => dispatch(loadUsersListStart()),
+    loadUsersListSuccess: (values) => dispatch(loadUsersListSuccess(values.data)),
+    loadUsersListFail: (error) => dispatch(loadUsersListFail(error)),
 });
 
 export class UsersListContainer extends Component {
@@ -25,7 +28,10 @@ export class UsersListContainer extends Component {
     }
     
     loadData() {
-        this.props.LoadUsersList()
+        this.props.loadUsersListStart();
+        return LoadUsersListApi()
+            .then(this.props.loadUsersListSuccess)
+            .catch(this.props.loadUsersListFail)
     }
 
     render() {

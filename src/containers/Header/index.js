@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
 import { TODO_LIST, USERS } from '../../constants/routs';
 import { isAdmin } from '../../services/helper';
 import './style.scss';

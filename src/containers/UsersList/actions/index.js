@@ -9,7 +9,6 @@ import {
     STOP_LOADING
 } from '../../App/constants';
 
-import { LoadUsersListApi } from '../services';
 import { serverError } from '../../../services/helper';
 
 export const success = (type, payload) => ({
@@ -22,21 +21,25 @@ export const fail = (type, payload) => ({
     payload
 });
 
+export const startGetUsers = (type) => ({
+    type
+});
+
 export const isLoading = (type) => ({
     type
 });
 
-export const LoadUsersList = () => dispatch => {
-    dispatch({ type: START_LOADING });
-    dispatch({ type: GET_USERS_LIST_START });
+export const loadUsersListSuccess = payload => dispatch => {
+    dispatch(isLoading(STOP_LOADING));
+    dispatch(success(GET_USERS_LIST_SUCCESS, payload));
+}
 
-    return LoadUsersListApi()
-    .then(result => {
-        dispatch(isLoading(STOP_LOADING));
-        dispatch(success(GET_USERS_LIST_SUCCESS, result.data));
-    })
-    .catch(error => {
-        dispatch(isLoading(STOP_LOADING));
-        dispatch(fail(GET_USERS_LIST_FAIL, serverError(error)));
-    })
+export const loadUsersListFail = error => dispatch => {
+    dispatch(isLoading(STOP_LOADING));
+    dispatch(fail(GET_USERS_LIST_FAIL, serverError(error)));
+}
+
+export const loadUsersListStart = () => dispatch => {
+    dispatch(isLoading(START_LOADING));
+    dispatch(startGetUsers(GET_USERS_LIST_START));
 }

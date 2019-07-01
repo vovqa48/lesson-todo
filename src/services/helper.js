@@ -28,6 +28,9 @@ const serverErrorCode = (errorCode) => {
         case 403:
             return 'Access denied';
 
+        case 404:
+            return 'Not found';
+
         default:
             return 'Server error. Please try again';
     }

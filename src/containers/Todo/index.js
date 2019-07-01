@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadTodoList, deleteItemSuccess, deleteItemFail, deleteItemStart } from './actions';
+import {
+    deleteItemSuccess, 
+    deleteItemFail, 
+    deleteItemStart,
+    addItemStart,
+    addItemSuccess,
+    addItemFail,
+    updateItemSuccess,
+    updateItemFail,
+    updateItemStart,
+    loadTodoListStart,
+    loadTodoListSuccess,
+    loadTodoListFail
+} from './actions';
 import { ItemTodo } from './itemTodo';
 import { getTodosState, getTodosErrorState } from './selectors'
 import { getRoleState } from '../Login/selectors'
 import { TodoForm } from './form';
-import { deleteTodoItemApi } from './services';
+import { deleteTodoItemApi, addTodoItemApi, updateTodoItemApi, loadTodoListApi } from './services';
 
 const mapStateToProps = (state) => ({
     role: getRoleState(state),
@@ -14,10 +27,18 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loadTodoList: () => dispatch(loadTodoList()),
+    loadTodoListStart: () => dispatch(loadTodoListStart()),
+    loadTodoListSuccess: (values) => dispatch(loadTodoListSuccess(values.data)),
+    loadTodoListFail: (error) => dispatch(loadTodoListFail(error)),
     deleteTodoItemStart: () => dispatch(deleteItemStart()),
     deleteTodoItemSuccess: (values) => dispatch(deleteItemSuccess(values.data)),
-    deleteTodoItemFail: (error) => dispatch(deleteItemFail(error))
+    deleteTodoItemFail: (error) => dispatch(deleteItemFail(error)),
+    addTodoItemStart: () => dispatch(addItemStart()),
+    addTodoItemSuccess: (values) => dispatch(addItemSuccess(values.data)),
+    addTodoItemFail: (error) => dispatch(addItemFail(error)),
+    updateTodoItemStart: () => dispatch(updateItemStart()),
+    updateTodoItemSuccess: (values) => dispatch(updateItemSuccess(values.data)),
+    updateTodoItemFail: (error) => dispatch(updateItemFail(error))
 });
 
 export class TodoContainer extends Component {
@@ -34,22 +55,37 @@ export class TodoContainer extends Component {
     }
     
     loadData() {
-        this.props.loadTodoList()
+        this.props.loadTodoListStart();
+        return loadTodoListApi()
+            .then(this.props.loadTodoListSuccess)
+            .catch(this.props.loadTodoListFail)
     }
 
     handleAddTodo(data) {
-        console.log(data)
-        // TODO: написать запрос для создания новой записи. Дата вся есть
+        this.props.addTodoItemStart();
+        return addTodoItemApi(data)
+            .then( 
+                (res) => {
+                    this.props.addTodoItemSuccess(res);
+                    this.loadData();
+                }
+            )
+            .catch(this.props.addTodoItemFail)
     }
 
     handleEditSubmit(data, id) {
-        console.log(data, id)
-        // TODO: написать запрос для сохранения. Дата и id все есть
+        this.props.updateTodoItemStart();
+        return updateTodoItemApi(id, data)
+            .then( 
+                (res) => {
+                    this.props.updateTodoItemSuccess(res);
+                    this.loadData();
+                }
+            )
+            .catch(this.props.updateTodoItemFail)
     }
 
     handleDelete(id) {
-        const { todos } = this.props;
-
         this.props.deleteTodoItemStart();
         return deleteTodoItemApi(id)
             .then( 

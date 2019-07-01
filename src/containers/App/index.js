@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from "react-router";
 import { PrivateRoute } from '../../components/PrivateRoute';
 import { Header } from '../Header';
-
 import { Home } from '../Home';
 import { Login } from '../Login';
 import { Todo } from '../Todo';
 import { TodoPage } from '../Todo/TodoPage';
-import { AddTodoPage } from '../Todo/AddTodoPage';
 import { UsersList } from '../UsersList';
-
-import { logout, getMe } from '../../containers/Login/actions';
-import { HOME, LOGIN, TODO_LIST, USERS, TODO_PAGE, ADD_TODO_PAGE } from '../../constants/routs';
-
+import { HOME, LOGIN, TODO_LIST, USERS, TODO_PAGE } from '../../constants/routs';
 import { history } from '../../store/store';
+import { logoutAPI, meAPI } from '../Login/services';
 
 import {
     getLoadingStatusState
@@ -28,6 +24,7 @@ import {
     getIsInitialDataFetchingOfUserState
 } from '../Login/selectors';
 
+import { logoutSuccess, logoutFail, getMeStart, getMeSuccess, getMeFail } from '../Login/actions/';
 import './style.scss';
 
 const Preloader = ({ isVisible }) => {
@@ -49,8 +46,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    logout: () => dispatch(logout()),
-    getMe: () => dispatch(getMe()),
+    getMeStart: () => dispatch(getMeStart()),
+    getMeSuccess: (values) => dispatch(getMeSuccess(values.data)),
+    getMeFail: (error) => dispatch(getMeFail(error)),
+    logoutUserSuccess: (values) => dispatch(logoutSuccess(values.data)),
+    logoutUserFail: (error) => dispatch(logoutFail(error)),
 });
 
 class AppContainer extends Component {
@@ -58,9 +58,8 @@ class AppContainer extends Component {
         isAuth: PropTypes.bool.isRequired,
         name: PropTypes.string,
         role: PropTypes.string,
-        logout: PropTypes.func.isRequired,
-        getMe: PropTypes.func.isRequired,
-        isLoading: PropTypes.bool
+        isLoading: PropTypes.bool,
+        isInitialDataFetching: PropTypes.bool,
     }
 
     componentDidMount() {
@@ -72,12 +71,17 @@ class AppContainer extends Component {
     }
     
     getMe() {
-        this.props.getMe()
+        this.props.getMeStart();
+        return meAPI()
+            .then(this.props.getMeSuccess)
+            .catch(this.props.getMeFail)
     }
 
     handleLogout() {
-        history.push(LOGIN)
-        this.props.logout()
+        history.push(LOGIN);
+        return logoutAPI()
+            .then(this.props.logoutUserSuccess)
+            .catch(this.props.logoutUserFail)
     }
 
     render () {
