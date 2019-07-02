@@ -5,6 +5,10 @@ export const loadTodoListApi = () => {
     return axios.get(API.GET_TODO_LIST())
 };
 
+export const loadTodoApi = (id) => {
+    return axios.get(API.GET_TODO_ITEM(id))
+};
+
 export const deleteTodoItemApi = (payload) => {
     return axios.delete(API.DELETE_TODO_ITEM(payload), payload)
 };

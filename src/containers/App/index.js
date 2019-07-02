@@ -112,7 +112,7 @@ class AppContainer extends Component {
                             )}
                         />
                         <PrivateRoute exact isAuth={isAuth} path={HOME} component={Home} />
-                        <PrivateRoute isAuth={isAuth} path={TODO_PAGE} component={TodoPage} />
+                        <PrivateRoute isAuth={isAuth} dynamicRoute path={TODO_PAGE} render={(props) => <TodoPage {...props} />} />
                         <PrivateRoute isAuth={isAuth} path={TODO_LIST} component={Todo} />
                         <PrivateRoute isAuth={isAuth} path={USERS} component={UsersList} />
                         <PrivateRoute isAuth={isAuth} render={'Page not found!'} />
