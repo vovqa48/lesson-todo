@@ -27,124 +27,202 @@ import {
 
 import { serverError } from '../../../services/helper';
 import { SubmissionError } from 'redux-form';
+import { loadTodoListApi, deleteTodoItemApi, addTodoItemApi, updateTodoItemApi, loadTodoApi } from '../services';
 
-export const success = (type, payload) => ({
-    type,
-    payload
-});
+//loading
+export const startLoading = () => ({
+    type: START_LOADING
+})
 
-export const fail = (type, payload) => ({
-    type,
-    payload
-});
-
-export const startDelete = (type) => ({
-    type
-});
-
-export const startAdd = (type) => ({
-    type
-});
-
-export const startUpdate = (type) => ({
-    type
-});
-
-export const startGetTodo = (type) => ({
-    type
-});
-
-export const startGetTodoList = (type) => ({
-    type
-});
-
-export const isLoading = (type) => ({
-    type
-});
+export const stopLoading = () => ({
+    type: STOP_LOADING
+})
+//loading
 
 //get list
-export const loadTodoListSuccess = payload => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(success(GET_TODO_LIST_SUCCESS, payload));
-}
+export const loadTodoListStart = () => ({
+    type: GET_TODO_LIST_START
+});
 
-export const loadTodoListFail = error => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(fail(GET_TODO_LIST_FAIL, serverError(error)));
-}
+export const loadTodoListSuccess = (payload) => ({
+    type: GET_TODO_LIST_SUCCESS,
+    payload
+});
 
-export const loadTodoListStart = () => dispatch => {
-    dispatch(isLoading(START_LOADING));
-    dispatch(startGetTodoList(GET_TODO_LIST_START));
+export const loadTodoListFail = (payload) => ({
+    type: GET_TODO_LIST_FAIL,
+    payload
+});
+//get list
+
+//delete
+export const deleteItemStart = () => ({
+    type: DELETE_TODO_ITEM_START
+});
+
+export const deleteItemSuccess = (payload) => ({
+    type: DELETE_TODO_ITEM_SUCCESS,
+    payload
+});
+
+export const deleteItemFail = (payload) => ({
+    type: DELETE_TODO_ITEM_FAIL,
+    payload
+});
+//delete
+
+//add
+export const addItemStart = () => ({
+    type: ADD_TODO_ITEM_START
+});
+
+export const addItemSuccess = (payload) => ({
+    type: ADD_TODO_ITEM_SUCCESS,
+    payload
+});
+
+export const addItemFail = (payload) => ({
+    type: ADD_TODO_ITEM_FAIL,
+    payload
+});
+//add
+
+//update
+export const updateItemStart = () => ({
+    type: UPDATE_TODO_ITEM_START
+});
+
+export const updateItemSuccess = (payload) => ({
+    type: UPDATE_TODO_ITEM_SUCCESS,
+    payload
+});
+
+export const updateItemFail = (payload) => ({
+    type: UPDATE_TODO_ITEM_FAIL,
+    payload
+});
+//update
+
+//get todo
+export const getItemStart = () => ({
+    type: GET_TODO_ITEM_START
+});
+
+export const getItemSuccess = (payload) => ({
+    type: GET_TODO_ITEM_SUCCESS,
+    payload
+});
+
+export const getItemFail = (payload) => ({
+    type: GET_TODO_ITEM_FAIL,
+    payload
+});
+//get todo
+
+//get list
+export const loadTodoList = () => dispatch => {
+
+    dispatch(startLoading());
+    dispatch(loadTodoListStart());
+    
+    loadTodoListApi()
+        .then(res => {
+                dispatch(stopLoading());
+                dispatch(loadTodoListSuccess(res.data));
+            }
+        )
+        .catch(error => {
+                dispatch(stopLoading());
+                dispatch(loadTodoListFail(serverError(error)));
+            }
+        )
 }
 //get list
 
 //delete
-export const deleteItemSuccess = payload => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(success(DELETE_TODO_ITEM_SUCCESS, payload));
-}
-
-export const deleteItemFail = error => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(fail(DELETE_TODO_ITEM_FAIL, serverError(error)));
-}
-
-export const deleteItemStart = () => dispatch => {
-    dispatch(isLoading(START_LOADING));
-    dispatch(startDelete(DELETE_TODO_ITEM_START));
+export const deleteItem = (id) => dispatch => {
+    dispatch(startLoading());
+    dispatch(deleteItemStart());
+    
+    deleteTodoItemApi(id)
+        .then(res => {
+                dispatch(stopLoading());
+                dispatch(deleteItemSuccess(res.data));
+                dispatch(loadTodoList());
+            }
+        )
+        .catch(error => {
+                dispatch(stopLoading());
+                dispatch(deleteItemFail(serverError(error)));
+            }
+        )
 }
 //delete
 
 //add
-export const addItemSuccess = payload => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(success(ADD_TODO_ITEM_SUCCESS, payload));
-}
+export const addItem = (values, resolveReject) => dispatch => {
+    const { resolve, reject } = resolveReject;
 
-export const addItemFail = error => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(fail(ADD_TODO_ITEM_FAIL, serverError(error)));
-    throw new SubmissionError({_error: serverError(error)});
-}
-
-export const addItemStart = () => dispatch => {
-    dispatch(isLoading(START_LOADING));
-    dispatch(startAdd(ADD_TODO_ITEM_START));
+    dispatch(startLoading());
+    dispatch(addItemStart());
+    
+    addTodoItemApi(values)
+        .then(res => {
+                dispatch(stopLoading());
+                dispatch(addItemSuccess(res.data));
+                dispatch(loadTodoList());
+                resolve();
+            }
+        )
+        .catch(error => {
+                dispatch(stopLoading());
+                dispatch(addItemFail(serverError(error)));
+                reject(new SubmissionError({_error: serverError(error)}));
+            }
+        )
 }
 //add
 
 //update
-export const updateItemSuccess = payload => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(success(UPDATE_TODO_ITEM_SUCCESS, payload));
-}
+export const updateItem = (id, values, resolveReject) => dispatch => {
+    const { resolve, reject } = resolveReject;
 
-export const updateItemFail = error => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(fail(UPDATE_TODO_ITEM_FAIL, serverError(error)));
-    throw new SubmissionError({_error: serverError(error)});
-}
-
-export const updateItemStart = () => dispatch => {
-    dispatch(isLoading(START_LOADING));
-    dispatch(startUpdate(UPDATE_TODO_ITEM_START));
+    dispatch(startLoading());
+    dispatch(updateItemStart());
+    
+    updateTodoItemApi(id, values)
+        .then(res => {
+                dispatch(stopLoading());
+                dispatch(updateItemSuccess(res.data));
+                dispatch(loadTodoList());
+                resolve();
+            }
+        )
+        .catch(error => {
+                dispatch(stopLoading());
+                dispatch(updateItemFail(serverError(error)));
+                reject(new SubmissionError({_error: serverError(error)}));
+            }
+        )
 }
 //update
 
 //get todo
-export const getItemSuccess = payload => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(success(GET_TODO_ITEM_SUCCESS, payload));
-}
+export const getItem = (id) => dispatch => {
 
-export const getItemFail = error => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(fail(GET_TODO_ITEM_FAIL, serverError(error)));
-}
-
-export const getItemStart = () => dispatch => {
-    dispatch(isLoading(START_LOADING));
-    dispatch(startGetTodo(GET_TODO_ITEM_START));
+    dispatch(startLoading());
+    dispatch(getItemStart());
+    
+    loadTodoApi(id)
+        .then(res => {
+                dispatch(stopLoading());
+                dispatch(getItemSuccess(res.data));
+            }
+        )
+        .catch(error => {
+                dispatch(stopLoading());
+                dispatch(getItemFail(serverError(error)));
+            }
+        )
 }
 //get todo

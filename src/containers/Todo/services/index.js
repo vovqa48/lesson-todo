@@ -20,7 +20,3 @@ export const addTodoItemApi = (payload) => {
 export const updateTodoItemApi = (id, payload) => {
     return axios.put(API.UPDATE_TODO_ITEM(id), payload)
 };
-
-export const getTodoItemApi = (id) => {
-    return axios.get(API.GET_TODO_ITEM(id))
-};

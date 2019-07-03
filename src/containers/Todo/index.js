@@ -1,24 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-    deleteItemSuccess, 
-    deleteItemFail, 
-    deleteItemStart,
-    addItemStart,
-    addItemSuccess,
-    addItemFail,
-    updateItemSuccess,
-    updateItemFail,
-    updateItemStart,
-    loadTodoListStart,
-    loadTodoListSuccess,
-    loadTodoListFail
+    loadTodoList,
+    deleteItem,
+    addItem
 } from './actions';
 import { ItemTodo } from './itemTodo';
 import { getTodosState, getTodosErrorState } from './selectors'
 import { getRoleState } from '../Login/selectors'
 import { TodoForm } from './form';
-import { deleteTodoItemApi, addTodoItemApi, updateTodoItemApi, loadTodoListApi } from './services';
 
 const mapStateToProps = (state) => ({
     role: getRoleState(state),
@@ -27,18 +17,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loadTodoListStart: () => dispatch(loadTodoListStart()),
-    loadTodoListSuccess: (values) => dispatch(loadTodoListSuccess(values.data)),
-    loadTodoListFail: (error) => dispatch(loadTodoListFail(error)),
-    deleteTodoItemStart: () => dispatch(deleteItemStart()),
-    deleteTodoItemSuccess: (values) => dispatch(deleteItemSuccess(values.data)),
-    deleteTodoItemFail: (error) => dispatch(deleteItemFail(error)),
-    addTodoItemStart: () => dispatch(addItemStart()),
-    addTodoItemSuccess: (values) => dispatch(addItemSuccess(values.data)),
-    addTodoItemFail: (error) => dispatch(addItemFail(error)),
-    updateTodoItemStart: () => dispatch(updateItemStart()),
-    updateTodoItemSuccess: (values) => dispatch(updateItemSuccess(values.data)),
-    updateTodoItemFail: (error) => dispatch(updateItemFail(error))
+    loadTodoList: () => dispatch(loadTodoList()),
+    deleteItem: (id) => dispatch(deleteItem(id)),
+    addTodoItem: (values, resolveReject) => dispatch(addItem(values, resolveReject)),
 });
 
 export class TodoContainer extends Component {
@@ -51,46 +32,16 @@ export class TodoContainer extends Component {
     }
     
     loadData() {
-        this.props.loadTodoListStart();
-        return loadTodoListApi()
-            .then(this.props.loadTodoListSuccess)
-            .catch(this.props.loadTodoListFail)
+        this.props.loadTodoList();
     }
 
-    handleAddTodo(data) {
-        this.props.addTodoItemStart();
-        return addTodoItemApi(data)
-            .then( 
-                (res) => {
-                    this.props.addTodoItemSuccess(res);
-                    this.loadData();
-                }
-            )
-            .catch(this.props.addTodoItemFail)
-    }
-
-    handleEditSubmit(data, id) {
-        this.props.updateTodoItemStart();
-        return updateTodoItemApi(id, data)
-            .then( 
-                (res) => {
-                    this.props.updateTodoItemSuccess(res);
-                    this.loadData();
-                }
-            )
-            .catch(this.props.updateTodoItemFail)
-    }
+    handleAddTodo = values => 
+        new Promise((resolve, reject) => {
+            this.props.addTodoItem(values, { resolve, reject });
+        })
 
     handleDelete(id) {
-        this.props.deleteTodoItemStart();
-        return deleteTodoItemApi(id)
-            .then( 
-                (res) => {
-                    this.props.deleteTodoItemSuccess(res);
-                    this.loadData();
-                }
-            )
-            .catch(this.props.deleteTodoItemFail)
+        this.props.deleteItem(id);
     }
 
     render() {
@@ -113,7 +64,7 @@ export class TodoContainer extends Component {
                     {
                         isOpen &&
                         <TodoForm
-                            customSubmit={(data) => this.handleAddTodo(data)}
+                            onSubmit={this.handleAddTodo}
                         />
                     }
                 </div>
@@ -127,7 +78,6 @@ export class TodoContainer extends Component {
                             description={todo.description} 
                             createdBy={todo.createdBy}
                             role={role}
-                            handleEditSubmit={(data, id) => this.handleEditSubmit(data, id)}
                             handleDelete={(id) => this.handleDelete(id)}
                         />
                     )

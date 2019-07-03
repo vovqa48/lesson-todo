@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getHistoryState, getLoadingStatusState } from '../../App/selectors';
 import { getTodoState, getTodosErrorState } from '../selectors';
-import { loadTodoApi } from '../services';
-import { getItemSuccess, getItemFail, getItemStart } from '../actions';
+import { getItem } from '../actions';
 
 const mapStateToProps = (state) => ({
     history: getHistoryState(state),
@@ -13,9 +12,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loadTodoStart: () => dispatch(getItemStart()),
-    loadTodoSuccess: (values) => dispatch(getItemSuccess(values.data)),
-    loadTodoFail: (error) => dispatch(getItemFail(error)),
+    getTodoItem: (todoId) => dispatch(getItem(todoId))
 });
 
 export class TodoPageContainer extends Component {
@@ -26,12 +23,11 @@ export class TodoPageContainer extends Component {
         this.loadData(todoId);
     }
 
-    loadData(todoId) {
-        this.props.loadTodoStart();
-        return loadTodoApi(todoId)
-            .then(this.props.loadTodoSuccess)
-            .catch(this.props.loadTodoFail)
-    }
+    loadData = (todoId) => 
+        new Promise((resolve, reject) => {
+            this.props.getTodoItem(todoId, { resolve, reject });
+        })
+    
 
     render() {
         const { todo, isLoading, error } = this.props;

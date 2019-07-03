@@ -4,13 +4,15 @@ import { change } from 'redux-form';
 import { Link } from "react-router-dom";
 import { TodoForm } from './form';
 import { isAdmin } from '../../services/helper';
+import { updateItem } from './actions';
 import './style.scss';
 
 const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    changeValue: (formName, path, value) => dispatch(change(formName, path, value))
+    changeValue: (formName, path, value) => dispatch(change(formName, path, value)),
+    updateTodoItem: (id, values, resolveReject) => dispatch(updateItem(id, values, resolveReject))
 });
 
 
@@ -30,9 +32,16 @@ class ItemTodoContainer extends Component {
         changeValue('todo', 'description', description)
     }
 
+    handleEditSubmit = (values) => {
+        const { id } = this.props;
+        return new Promise((resolve, reject) => {
+            this.props.updateTodoItem(id, values, { resolve, reject });
+        })
+    }
+
 
     render() {
-        const { id, title, description, createdBy, role, handleEditSubmit, handleDelete } = this.props;
+        const { id, title, description, createdBy, role, handleDelete } = this.props;
         const { isOpen } = this.state;
 
         return (
@@ -50,7 +59,7 @@ class ItemTodoContainer extends Component {
                 {
                     isOpen &&
                        <TodoForm
-                            customSubmit={(values) => handleEditSubmit(values, id)}
+                            onSubmit={this.handleEditSubmit}
                         />
                 }
             </div>

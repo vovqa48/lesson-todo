@@ -19,9 +19,9 @@ const renderField = ({ input, label, type, value, meta: { touched, error } }) =>
 
 export class TodoForm extends Component {
     render() {
-        const { error, handleSubmit, submitting, customSubmit } = this.props;
+        const { error, handleSubmit, submitting } = this.props;
         return (
-            <form onSubmit={handleSubmit(customSubmit)} className="form">
+            <form onSubmit={handleSubmit} className="form">
                 <Field
                     name="title"
                     type="text"
