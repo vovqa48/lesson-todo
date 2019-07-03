@@ -47,11 +47,7 @@ export class TodoContainer extends Component {
     }
 
     componentDidMount() {
-        const { todos } = this.props;
-
-        if(!todos.length) {
-            this.loadData();
-        }
+        this.loadData();
     }
     
     loadData() {

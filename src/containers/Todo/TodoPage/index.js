@@ -21,12 +21,9 @@ const mapDispatchToProps = (dispatch) => ({
 export class TodoPageContainer extends Component {
 
     componentDidMount() {
-        const { todo } = this.props;
         const todoId = this.props.computedMatch.params.id
-
-        if(todo.length === 0 && todoId.length) {
-            this.loadData(todoId);
-        }
+        
+        this.loadData(todoId);
     }
 
     loadData(todoId) {

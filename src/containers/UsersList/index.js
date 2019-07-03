@@ -20,11 +20,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export class UsersListContainer extends Component {
     componentDidMount() {
-        const { users } = this.props;
-
-        if(!users.length) {
-            this.loadData();
-        }
+        this.loadData();
     }
     
     loadData() {

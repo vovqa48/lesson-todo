@@ -10,8 +10,6 @@ import { Todo } from '../Todo';
 import { TodoPage } from '../Todo/TodoPage';
 import { UsersList } from '../UsersList';
 import { HOME, LOGIN, TODO_LIST, USERS, TODO_PAGE } from '../../constants/routs';
-import { history } from '../../store/store';
-import { logoutAPI, meAPI } from '../Login/services';
 
 import {
     getLoadingStatusState
@@ -24,7 +22,7 @@ import {
     getIsInitialDataFetchingOfUserState
 } from '../Login/selectors';
 
-import { logoutSuccess, logoutFail, getMeStart, getMeSuccess, getMeFail } from '../Login/actions/';
+import {logout, getMe } from '../Login/actions/';
 import './style.scss';
 
 const Preloader = ({ isVisible }) => {
@@ -46,11 +44,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getMeStart: () => dispatch(getMeStart()),
-    getMeSuccess: (values) => dispatch(getMeSuccess(values.data)),
-    getMeFail: (error) => dispatch(getMeFail(error)),
-    logoutUserSuccess: (values) => dispatch(logoutSuccess(values.data)),
-    logoutUserFail: (error) => dispatch(logoutFail(error)),
+    logout: () => dispatch(logout()),
+    getMe: () => dispatch(getMe()),
 });
 
 class AppContainer extends Component {
@@ -66,22 +61,16 @@ class AppContainer extends Component {
         const { isInitialDataFetching } = this.props;
 
         if( isInitialDataFetching ) {
-            this.getMe();
+            this.handleMe();
         }
     }
     
-    getMe() {
-        this.props.getMeStart();
-        return meAPI()
-            .then(this.props.getMeSuccess)
-            .catch(this.props.getMeFail)
+    handleMe() {
+        this.props.getMe();
     }
 
     handleLogout() {
-        history.push(LOGIN);
-        return logoutAPI()
-            .then(this.props.logoutUserSuccess)
-            .catch(this.props.logoutUserFail)
+        this.props.logout();
     }
 
     render () {

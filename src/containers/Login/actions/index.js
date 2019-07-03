@@ -18,70 +18,120 @@ import {
 
 import { serverError } from '../../../services/helper';
 import { SubmissionError } from 'redux-form';
+import { loginAPI, logoutAPI, meAPI } from '../services';
+import { history } from '../../../store/store';
+import { LOGIN } from '../../../constants/routs';
 
-export const success = (type, payload) => ({
-    type,
-    payload
-});
+//loading
+export const startLoading = () => ({
+    type: START_LOADING
+})
 
-export const fail = (type, payload) => ({
-    type,
-    payload
-});
-
-export const startLogin = (type) => ({
-    type
-});
-
-export const startGetMe = (type) => ({
-    type
-});
-
-export const isLoading = (type) => ({
-    type
-});
+export const stopLoading = () => ({
+    type: STOP_LOADING
+})
+//loading
 
 //Login
-export const loginSuccess = payload => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(success(USER_LOGIN_SUCCESS, payload));
-}
+export const startLogin = () => ({
+    type: USER_LOGIN_START
+});
 
-export const loginFail = error => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(fail(USER_LOGIN_FAIL, serverError(error)));
-    throw new SubmissionError({_error: serverError(error)});
-}
+export const successLogin = (payload) => ({
+    type: USER_LOGIN_SUCCESS,
+    payload
+})
 
-export const loginStart = () => dispatch => {
-    dispatch({ type: START_LOADING });
-    dispatch(startLogin(USER_LOGIN_START));
+export const failLogin = (payload) => ({
+    type: USER_LOGIN_FAIL,
+    payload
+})
+//Login
+
+//Logout
+export const successLogout = () => ({
+    type: USER_LOGOUT_SUCCESS
+})
+
+export const failLogout = (payload) => ({
+    type: USER_LOGOUT_FAIL,
+    payload
+})
+//Logout
+
+//Me
+export const startMe = () => ({
+    type: USER_ME_START
+});
+
+export const successMe = (payload) => ({
+    type: USER_ME_SUCCESS,
+    payload
+})
+
+export const failMe = (payload) => ({
+    type: USER_ME_FAIL,
+    payload
+})
+//Me
+
+//Login
+export const onSubmit = (values, resolveReject) => dispatch => {
+    const { resolve, reject } = resolveReject;
+
+    dispatch(startLoading());
+    dispatch(startLogin());
+    
+    loginAPI(values)
+        .then(res => {
+                dispatch(stopLoading());
+                dispatch(successLogin(res.data));
+                resolve();
+            }
+        )
+        .catch(error => {
+                dispatch(stopLoading());
+                dispatch(failLogin(serverError(error)));
+                reject(new SubmissionError({_error: serverError(error)}));
+            }
+        )
 }
 //Login
 
 //Logout
-export const logoutSuccess = payload => dispatch => {
-    dispatch(success(USER_LOGOUT_SUCCESS, payload));
-}
+export const logout = () => dispatch => {
 
-export const logoutFail = error => dispatch => {
-    dispatch(fail(USER_LOGOUT_FAIL, serverError(error)));
+    history.push(LOGIN);
+    dispatch(successLogout());
+    
+    logoutAPI()
+        .then(res => {
+                dispatch(successLogout());
+            }
+        )
+        .catch(error => {
+                dispatch(failLogout(serverError(error)));
+            }
+        )
 }
 //Logout
 
 //Me
-export const getMeSuccess = payload => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(success(USER_ME_SUCCESS, payload));
-}
+export const getMe = () => dispatch => {
 
-export const getMeFail = error => dispatch => {
-    dispatch(isLoading(STOP_LOADING));
-    dispatch(fail(USER_ME_FAIL, serverError(error)));
-}
-
-export const getMeStart = () => dispatch => {
-    dispatch(isLoading(START_LOADING));
-    dispatch(startGetMe(USER_ME_START));
+    dispatch(startLoading());
+    dispatch(startMe());
+    
+    meAPI()
+        .then(res => {
+                dispatch(stopLoading());
+                dispatch(successMe(res.data));
+            }
+        )
+        .catch(error => {
+                dispatch(stopLoading());
+                dispatch(failMe(serverError(error)));
+            }
+        )
 }
 //Me
